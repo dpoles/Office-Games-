@@ -4,6 +4,7 @@ const VERBS = ['Dai', 'Apri', 'Chiudi', 'Leggi', 'Vai a', 'Prendi', 'Guarda', 'U
 const WALK = 4;
 const SCENE_Y = 16, SCENE_H = 136, FLOOR_Y = 140;
 
+ctx.imageSmoothingEnabled = false;
 const IMG = {};
 for (const [name, src] of Object.entries(ART)) { IMG[name] = new Image(); IMG[name].src = src; }
 
@@ -41,11 +42,11 @@ const ROOMS = {
   ufficio: {
     draw() {
       img('bg_ufficio', 0, 16, 320, 136);
-      img(state.talker === 'boss' && state.msgT > 0 && (state.t >> 3) % 2 ? 'boss_talk' : 'boss', 138, 46);
+      img('boss', 139, 49 - (state.talker === 'boss' && state.msgT > 0 && (state.t >> 3) % 2));
     },
     fg: 'fg_ufficio', fgY: 121,
     objects: [
-      { id: 'capo', name: 'capo', x: 140, y: 46, w: 40, h: 40, wx: 160, wy: 146 },
+      { id: 'capo', name: 'capo', x: 139, y: 49, w: 42, h: 38, wx: 160, wy: 146 },
       { id: 'scrivania', name: 'scrivania', x: 96, y: 86, w: 128, h: 35, wx: 160, wy: 146 },
       { id: 'schedario', name: 'schedario', x: 32, y: 46, w: 31, h: 67, wx: 50, wy: 118 },
       { id: 'giornali', name: 'pila di giornali', x: 2, y: 104, w: 26, h: 36, wx: 40, wy: 136 },
@@ -148,11 +149,13 @@ function draw() {
   rect(0, 0, 320, 200, '#000');
   const R = ROOMS[state.room]; R.draw();
   const z = state.zak, moving = z.x !== z.tx || z.y !== z.ty;
-  const fr = moving ? 'zak_walk' + (Math.floor(z.frame / 5) % 4) : 'zak_stand';
+  const talking = state.talker === 'zak' && state.msgT > 0 && !moving;
+  const fr = moving ? (z.up ? 'zak_back' : 'zak_walk' + (Math.floor(z.frame / 8) % 2))
+    : talking && (state.t >> 4) % 2 ? 'zak_talk' : 'zak_stand';
   const sc = 0.78 + (z.y - 112) / 38 * 0.22;
   if (z.y >= R.fgY) img(R.fg, 0, 16, 320, 136);
   ctx.fillStyle = '#0005'; ctx.beginPath(); ctx.ellipse(z.x, z.y, 9 * sc, 2.5 * sc, 0, 0, 7); ctx.fill();
-  spr(fr, Math.round(z.x - IMG[fr].width * 55 / IMG[fr].height * sc / 2), Math.round(z.y - 55 * sc), z.flip, sc);
+  spr(fr, Math.round(z.x - IMG[fr].width * 55 / IMG[fr].height * sc / 2), Math.round(z.y - 55 * sc), z.flip && fr !== 'zak_back' && fr !== 'zak_stand', sc);
   if (z.y < R.fgY) img(R.fg, 0, 16, 320, 136);
   if (state.msgT > 0) {
     const lines = wrap(state.msg, 52), cx = state.talker === 'boss' ? 160 : z.x;
@@ -172,6 +175,7 @@ function tick() {
   if (z.x !== z.tx || z.y !== z.ty) {
     const dx = z.tx - z.x, dy = z.ty - z.y, d = Math.hypot(dx, dy), v = 1.3;
     if (Math.abs(dx) > 0.5) z.flip = dx < 0;
+    z.up = dy < 0 && Math.abs(dy) * 1.5 > Math.abs(dx);
     if (d <= v) { z.x = z.tx; z.y = z.ty; } else { z.x += dx / d * v; z.y += dy / d * v * 0.6; }
     z.frame++;
     if (z.x === z.tx && z.y === z.ty && state.after) { const a = state.after; state.after = null; a(); }

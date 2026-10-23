@@ -5,7 +5,7 @@ Tutta la grafica è **originale** (sfondi in prospettiva con retinatura, sprite 
 nessun asset del gioco LucasArts è incluso.
 
 - Gioca: apri `index.html` nel browser.
-- Rigenera la grafica: `python3 tools/make_art.py` → `art/*.png` e `art.js`.
+- Rigenera la grafica: `python3 tools/make_art.py` (sfondi/oggetti) e `python3 tools/use_sheet.py` (personaggi dal foglio `art/src/personaggi.jpg`, ritagliato con `tools/slice_sheet.py`).
 - Anteprima sprite: `art/preview_sprites.png`.
 
 Soluzione: accendi la TV con il telecomando, guarda sotto il letto, vai in

@@ -192,61 +192,7 @@ def ufficio():
     f.rectangle((152, 66, 168, 70), fill=(60, 120, 200))
     return im, fg
 
-# ---------------- PERSONAGGI ----------------
-SK, SKD = (246, 196, 156), (206, 144, 108)
-def zak(phase=None):
-    im = Image.new('RGBA', (28, 56)); d = ImageDraw.Draw(im)
-    s = 0 if phase is None else math.sin(phase)
-    lift = 0 if phase is None else abs(math.cos(phase))
-    # gambe
-    for side, sw in ((-1, s), (1, -s)):
-        hx = 14 + side * 3; fx = hx + sw * 5
-        col, dk = ((76, 76, 92), (50, 50, 62)) if side < 0 else ((64, 64, 78), (42, 42, 54))
-        d.polygon([(hx - 3, 32), (hx + 3, 32), (fx + 2, 51), (fx - 2, 51)], fill=col)
-        d.line((hx + 2, 33, fx + 1, 50), fill=dk)
-        d.ellipse((fx - 3 + side, 50, fx + 3 + side, 54), fill=(110, 60, 30)); d.line((fx - 2 + side, 50, fx + 1 + side, 50), fill=(150, 90, 50))
-    # braccio dietro
-    d.line((20, 20, 21 + s * 3, 31), fill=(30, 64, 160), width=4); d.ellipse((19 + s * 3, 30, 23 + s * 3, 34), fill=SKD)
-    # busto
-    d.polygon([(7, 18), (21, 18), (22, 34), (6, 34)], fill=(56, 110, 226))
-    d.polygon([(17, 18), (21, 18), (22, 34), (18, 34)], fill=(34, 70, 170))
-    d.line((8, 19, 7, 33), fill=(110, 160, 255))
-    d.polygon([(11, 18), (17, 18), (14, 28)], fill=(246, 246, 246))
-    d.polygon([(13, 19), (15, 19), (16, 26), (14, 29), (12, 26)], fill=(210, 30, 40)); d.point((13, 21), fill=(255, 90, 90))
-    d.rectangle((6, 32, 22, 34), fill=(40, 40, 50))
-    # braccio davanti
-    d.line((8, 20, 7 - s * 3, 31), fill=(70, 126, 236), width=4); d.ellipse((5 - s * 3, 30, 9 - s * 3, 34), fill=SK)
-    # testa
-    d.rectangle((12, 14, 16, 18), fill=SKD)
-    d.ellipse((8, 3, 20, 17), fill=SK); d.chord((8, 3, 20, 17), -60, 60, fill=SKD)
-    d.ellipse((7, 0, 21, 10), fill=(124, 66, 30)); d.rectangle((7, 5, 9, 12), fill=(124, 66, 30)); d.rectangle((19, 5, 20, 10), fill=(90, 44, 18))
-    d.line((10, 2, 15, 1), fill=(176, 106, 54)); d.line((9, 4, 12, 3), fill=(176, 106, 54))
-    d.polygon([(10, 7), (18, 7), (18, 5), (10, 5)], fill=(124, 66, 30))
-    d.point((11, 10), fill=(250, 250, 250)); d.point((12, 10), fill=(30, 30, 70))
-    d.point((16, 10), fill=(250, 250, 250)); d.point((17, 10), fill=(30, 30, 70))
-    d.line((11, 8, 12, 8), fill=(90, 44, 18)); d.line((16, 8, 17, 8), fill=(90, 44, 18))
-    d.line((14, 11, 15, 12), fill=SKD); d.line((13, 14, 15, 14), fill=(170, 60, 60))
-    im = outline(im)
-    if lift: im = im.transform(im.size, Image.AFFINE, (1, 0, 0, 0, 1, lift * 0.6))
-    return im
-
-def boss(talk=False):
-    im = Image.new('RGBA', (44, 46)); d = ImageDraw.Draw(im)
-    d.polygon([(4, 46), (6, 28), (14, 22), (30, 22), (38, 28), (40, 46)], fill=(54, 54, 64))
-    d.polygon([(30, 22), (38, 28), (40, 46), (32, 46)], fill=(36, 36, 44)); d.line((7, 30, 6, 45), fill=(96, 96, 110))
-    d.polygon([(17, 22), (27, 22), (22, 36)], fill=(246, 246, 246))
-    d.polygon([(21, 23), (23, 23), (24, 33), (22, 36), (20, 33)], fill=(200, 24, 36))
-    d.line((16, 23, 21, 33), fill=(30, 30, 36)); d.line((28, 23, 23, 33), fill=(30, 30, 36))
-    d.rectangle((17, 18, 27, 23), fill=SKD)
-    d.ellipse((10, 0, 34, 22), fill=SK); d.chord((10, 0, 34, 22), -50, 70, fill=SKD)
-    d.ellipse((15, 3, 21, 7), fill=(255, 236, 210))  # riflesso calvizie
-    d.ellipse((8, 9, 12, 15), fill=SKD); d.ellipse((32, 9, 36, 15), fill=SKD)
-    d.line((15, 9, 20, 11), fill=(60, 40, 30), width=2); d.line((24, 11, 29, 9), fill=(60, 40, 30), width=2)
-    d.point((18, 12), fill=(30, 30, 60)); d.point((26, 12), fill=(30, 30, 60))
-    d.line((21, 12, 23, 15), fill=SKD)
-    if talk: d.ellipse((19, 16, 25, 20), fill=(110, 20, 30))
-    else: d.line((19, 18, 25, 18), fill=(130, 50, 50))
-    return outline(im)
+SK = (246, 196, 156)
 
 # ---------------- OGGETTI (icone inventario) ----------------
 PAL = {'k': (20, 16, 24), 's': SK, 'h': (124, 66, 30), 'b': (56, 110, 226), 'w': (245, 245, 245),
@@ -272,16 +218,7 @@ if __name__ == '__main__':
     def save(name, im): im.save(os.path.join(OUT, name + '.png')); files[name] = 'art/' + name + '.png'
     for n, fn in (('casa', casa), ('ufficio', ufficio)):
         bg, fg = fn(); save('bg_' + n, bg); save('fg_' + n, fg)
-    save('zak_stand', zak())
-    for i in range(4): save('zak_walk%d' % i, zak(i * math.pi / 2))
-    save('boss', boss()); save('boss_talk', boss(True))
     for k, v in ITEMS.items(): save(k, item(v))
-    with open(os.path.join(ROOT, 'art.js'), 'w') as f:
-        f.write('// Generato da tools/make_art.py\nwindow.ART = ' + json.dumps(files) + ';\n')
-    # anteprima sprite ingrandita
-    names = ['zak_stand', 'zak_walk0', 'zak_walk1', 'zak_walk2', 'zak_walk3', 'boss', 'boss_talk', 'card', 'kazoo', 'remote']
-    ims = [Image.open(os.path.join(OUT, n + '.png')) for n in names]
-    sheet = Image.new('RGBA', (sum(i.width + 4 for i in ims), 56), (70, 70, 110, 255)); x = 0
-    for i in ims: sheet.paste(i, (x, 0), i); x += i.width + 4
-    sheet.resize((sheet.width * 4, sheet.height * 4), Image.NEAREST).save(os.path.join(OUT, 'preview_sprites.png'))
+    # i personaggi vengono dal foglio in art/src (vedi tools/use_sheet.py)
+    import use_sheet; use_sheet.write_art_js()
     print('ok')
