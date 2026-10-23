@@ -1,0 +1,2 @@
+// Generato da tools/make_art.py
+window.ART = {"bg_casa": "art/bg_casa.png", "fg_casa": "art/fg_casa.png", "bg_ufficio": "art/bg_ufficio.png", "fg_ufficio": "art/fg_ufficio.png", "zak_stand": "art/zak_stand.png", "zak_walk0": "art/zak_walk0.png", "zak_walk1": "art/zak_walk1.png", "zak_walk2": "art/zak_walk2.png", "zak_walk3": "art/zak_walk3.png", "boss": "art/boss.png", "boss_talk": "art/boss_talk.png", "card": "art/card.png", "kazoo": "art/kazoo.png", "remote": "art/remote.png"};
